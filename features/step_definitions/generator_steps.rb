@@ -1,5 +1,7 @@
 Given /^I have expanded migrator$/ do
-  pending
+  When "I expand migrator"
+  Then "there is a Rakefile"
+  And "a DB directory is created"
 end
 
 When /^I expand migrator$/ do
@@ -19,4 +21,15 @@ end
 
 Given /^there is a DB directory$/ do
   FileUtils.mkdir File.join(@working_dir, 'db')
+end
+
+When /^I run the rake task "([^\"]*)" with "([^\"]*)"$/ do |task, env|
+  keys_to_delete = []
+  env.split(' ').each { |s| k,v = s.split('=') ; ENV[k] = v ; keys_to_delete << k }
+  Migrator::Tasks.new(:path => @working_dir)
+  Rake.application[task].reenable
+  @stdout = OutputCatcher.catch_out do
+    Rake.application[task].invoke
+  end
+  keys_to_delete.each { |k| ENV.delete(k) }
 end

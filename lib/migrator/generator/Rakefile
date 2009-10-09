@@ -1,1 +1,12 @@
 # migrator Rakefile
+
+require 'rubygems'
+require 'rake'
+
+begin
+  require 'migrator'
+  Migrator::Tasks.new
+  
+rescue LoadError
+  puts "Migrator is required. Install: gem install migrator"
+end

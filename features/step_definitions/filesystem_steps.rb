@@ -32,10 +32,6 @@ Given /^there is no Rakefile$/ do
   Given %|"Rakefile" does not exist|
 end
 
-When /^I run "([^\"]*)"$/ do |command|
-  pending
-end
-
 Then /^I'm told that "([^\"]*)"$/ do |output|
   assert_match Regexp.new(output, 'i'), @stdout
 end

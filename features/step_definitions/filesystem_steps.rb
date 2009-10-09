@@ -37,5 +37,5 @@ When /^I run "([^\"]*)"$/ do |command|
 end
 
 Then /^I'm told that "([^\"]*)"$/ do |output|
-  pending
+  assert_match Regexp.new(output, 'i'), @stdout
 end

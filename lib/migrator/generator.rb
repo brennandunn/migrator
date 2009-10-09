@@ -6,6 +6,7 @@ class Migrator
     def initialize(*args)
       self.options = Options.new(args)
       options[:directory] ||= Dir.pwd
+      
       create_rakefile
       create_db_directory
     end
@@ -22,6 +23,8 @@ class Migrator
       db_directory = File.join(options[:directory], 'db')
       unless File.exists?(db_directory) || File.directory?(db_directory)
         FileUtils.mkdir db_directory
+      else
+        puts %|The database directory already exists. Leaving it alone.|
       end
     end
     

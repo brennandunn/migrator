@@ -18,5 +18,5 @@ Then /^the Rakefile is appended$/ do
 end
 
 Given /^there is a DB directory$/ do
-  pending
+  FileUtils.mkdir File.join(@working_dir, 'db')
 end

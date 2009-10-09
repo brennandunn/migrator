@@ -11,7 +11,6 @@ Feature: expanding into a project
     Then there is a Rakefile
     And a DB directory is created
   
-  @wip
   Scenario: creating a Rakefile when one exists already
     Given a working directory
     And I create "Rakefile" with ""

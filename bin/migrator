@@ -5,4 +5,4 @@ require 'optparse'
 $:.unshift File.join(File.dirname(__FILE__), '..', 'lib')
 require 'migrator'
 
-Migrator.setup(*ARGV)
+Migrator::Generator.new(*ARGV)

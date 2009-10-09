@@ -8,12 +8,13 @@ Feature: expanding into a project
     And there is no Rakefile
     When I expand migrator
     
-    Then a Rakefile is created
+    Then there is a Rakefile
     And a DB directory is created
   
+  @wip
   Scenario: creating a Rakefile when one exists already
     Given a working directory
-    And there is a Rakefile
+    And I create "Rakefile" with ""
     When I expand migrator
     
     Then the Rakefile is appended

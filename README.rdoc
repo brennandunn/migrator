@@ -17,7 +17,7 @@ This is a project still in it's infancy, and fully backed by a series of Cucumbe
   future version unintentionally. Tests are written in Cucumber / Test::Unit
 * Commit, do not mess with rakefile, version, or history.
   (if you want to have your own version, that is fine but
-   bump version in a commit by itself I can ignore when I pull)
+  bump version in a commit by itself I can ignore when I pull)
 * Send me a pull request. Bonus points for topic branches.
 
 == Copyright

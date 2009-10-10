@@ -1,18 +1,34 @@
 class Migrator
   
   class Proxy
-    attr_reader :migration
+    attr_reader :reference, :migration, :downscored_name
     
-    delegate :up, :down, :name, :to => :migration
+    delegate :name, :dependencies, :to => :migration
     
-    def initialize(file)
+    def initialize(reference, file)
+      @reference = reference
       load(file)
-      @name = file.scan(/\/db\/(.*)\.rb/).flatten.first
-      @migration = @name.camelize.constantize
+      @downscored_name = file.scan(/\/db\/(.*)\.rb/).flatten.first
+      @migration = @downscored_name.camelize.constantize
+    end
+    
+    def up
+      invoke_dependencies
+      @migration.up
     end
     
     def to_yaml
       { @migration.name => Time.now }
+    end
+    
+    
+    private
+    
+    def invoke_dependencies
+      dependencies.each do |klass|
+        proxy = reference.proxy_for_class(klass)
+        reference.run_migration(proxy)
+      end
     end
     
   end
@@ -27,7 +43,7 @@ class Migrator
     end
     
     def up!
-      (migration_tree - applied_migrations).each { |m| m.up ; record(m) }
+      (migration_tree_with_scope - applied_migrations).each { |m| run_migration(m) }
       persist
     end
     
@@ -35,11 +51,26 @@ class Migrator
       
     end
     
+    def run_migration(proxy)
+      proxy.up
+      record(proxy)
+    end
+    
+    def proxy_for_class(klass)
+      migration_tree.detect { |m| m.migration == klass }
+    end
+    
     
     private
     
     def migration_tree
-      @migration_tree ||= Dir.glob(File.join(directory, '**', '*.rb')).map { |f| Proxy.new(f) }
+      @migration_tree ||= begin
+        migrations = Dir.glob(File.join(directory, '**', '*.rb')).map { |f| Proxy.new(self, f) }
+      end
+    end
+    
+    def migration_tree_with_scope
+      migration_tree.select { |m| options[:scope].include?(m.downscored_name) } if options[:scope].present?
     end
     
     def applied_migrations

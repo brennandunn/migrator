@@ -26,7 +26,7 @@ class Migrator
         
         desc "Run the migrations."
         task :run do
-          scope = ENV['files']
+          scope = ENV['files'].split(',').map(&:strip) if ENV['files']
           instance.run(:scope => scope)
         end
         

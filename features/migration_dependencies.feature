@@ -33,5 +33,6 @@ Feature: ensuring migrations are run in proper order
       end
       """
     When I run the rake task "migration:run" with "files=alter_users"
-    Then the migrator dotfile contains "CreateUsers"
+    Then AlterUsers runs CreateUsers
+    And the migrator dotfile contains "CreateUsers"
     And the migrator dotfile contains "AlterUsers"

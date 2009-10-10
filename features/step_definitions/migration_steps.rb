@@ -5,3 +5,7 @@ end
 Then /^the migrator dotfile contains "([^\"]*)"$/ do |string|
   Then %|".migrator" contains "#{string}"|
 end
+
+Then /^(.*) runs (.*)$/ do |migration, dependency|
+  migration, dependency = migration.constantize, dependency.constantize
+end

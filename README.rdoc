@@ -1,13 +1,20 @@
 = migrator
+== A different way of migrating
 
-Description goes here.
+The aim of this project is to create a migration framework that can be embedded within any project that works with SQL, regardless of whether the project's framework supports any type of migration framework.
+
+Also, rather than dealing with a linear progression of migrations ordered by timestamps, migrator uses a dependency tree. For example, in order to run AddBooleanToUsers, CreateUsers must have already been run (or migrator will run it first).
+
+Instead of persisting the history of migration executions in an arbitrary database table in the target database, a dotfile is used.
+
+This is a project still in it's infancy, and fully backed by a series of Cucumber features.
 
 == Note on Patches/Pull Requests
  
 * Fork the project.
 * Make your feature addition or bug fix.
 * Add tests for it. This is important so I don't break it in a
-  future version unintentionally.
+  future version unintentionally. Tests are written in Cucumber / Test::Unit
 * Commit, do not mess with rakefile, version, or history.
   (if you want to have your own version, that is fine but
    bump version in a commit by itself I can ignore when I pull)

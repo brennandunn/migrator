@@ -3,17 +3,16 @@ class Migrator
   class Proxy
     attr_reader :migration
     
-    delegate :up, :down, :to => :migration
+    delegate :up, :down, :name, :to => :migration
     
-    def initialize(reference, file)
-      @reference = reference
+    def initialize(file)
       load(file)
-      @name = file.scan(/#{Regexp.new(reference.directory)}\/db\/(.*)\.rb/).flatten.first
+      @name = file.scan(/\/db\/(.*)\.rb/).flatten.first
       @migration = @name.camelize.constantize
     end
     
     def to_yaml
-      { Time.now.to_i => { :name => @migration.name } }
+      { @migration.name => Time.now }
     end
     
   end
@@ -28,8 +27,7 @@ class Migrator
     end
     
     def up!
-      @queue = migration_tree
-      @queue.each { |m| m.up ; record(m) }
+      (migration_tree - applied_migrations).each { |m| m.up ; record(m) }
       persist
     end
     
@@ -41,10 +39,11 @@ class Migrator
     private
     
     def migration_tree
-      @tree ||= begin
-        files = Dir.glob(File.join(directory, '**', '*.rb'))
-        files.map { |f| Proxy.new(self, f) }
-      end
+      @migration_tree ||= Dir.glob(File.join(directory, '**', '*.rb')).map { |f| Proxy.new(f) }
+    end
+    
+    def applied_migrations
+      migration_tree.select { |m| @io['migrations'].map(&:keys).flatten.include?(m.name) }
     end
     
     def record(migration)
@@ -52,7 +51,7 @@ class Migrator
     end
     
     def persist
-      File.open(File.join(directory, '.migrator'), 'w') { |f| YAML::dump(@io, f) }
+      File.open(File.join(directory, '.migrator'), 'w+') { |f| YAML::dump(@io, f) }
     end
     
   end

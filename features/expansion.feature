@@ -1,3 +1,4 @@
+@expansion
 Feature: expanding into a project
   In order to add migration support
   A user should be able to
@@ -10,6 +11,7 @@ Feature: expanding into a project
     
     Then there is a Rakefile
     And a DB directory is created
+    And a dotfile is created
   
   Scenario: creating a Rakefile when one exists already
     Given a working directory
@@ -18,10 +20,18 @@ Feature: expanding into a project
     
     Then the Rakefile is appended
     And a DB directory is created
+    And a dotfile is created
   
   Scenario: attempting to create a DB directory when one exists
     Given a working directory
     And there is a DB directory
     When I expand migrator
     
-    Then I'm told that "database directory already exists"
+    Then I'm told that database directory already exists
+  
+  Scenario: attempting to create a dotfile when one exists
+    Given a working directory
+    And there is a dotfile
+    When I expand migrator
+    
+    Then I'm told that the .migrator dotfile already exists

@@ -9,6 +9,7 @@ class Migrator
       
       create_rakefile
       create_db_directory
+      create_dotfile
     end
     
     
@@ -25,6 +26,16 @@ class Migrator
         FileUtils.mkdir db_directory
       else
         puts %|The database directory already exists. Leaving it alone.|
+      end
+    end
+    
+    def create_dotfile
+      dotfile     = File.join(File.dirname(__FILE__), 'generator', '.migrator')
+      destination = File.join(options[:directory], '.migrator')
+      unless File.exists?(destination)
+        FileUtils.cp(dotfile, options[:directory])
+      else
+        puts %|The .migrator dotfile already exists. Leaving it alone.|
       end
     end
     

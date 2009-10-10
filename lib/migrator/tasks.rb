@@ -24,6 +24,12 @@ class Migrator
           end
         end
         
+        desc "Run the migrations."
+        task :run do
+          scope = ENV['files']
+          instance.run(:scope => scope)
+        end
+        
       end
       
     end

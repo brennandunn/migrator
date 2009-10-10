@@ -15,12 +15,20 @@ Then /^a DB directory is created$/ do
   assert File.directory?(File.join(@working_dir, 'db')), 'Expected a DB directory be created'
 end
 
+Then /^a dotfile is created$/ do
+  Then %|a file named ".migrator" is created|
+end
+
 Then /^the Rakefile is appended$/ do
   Then %|"Rakefile" contains "migrator"|
 end
 
 Given /^there is a DB directory$/ do
   FileUtils.mkdir File.join(@working_dir, 'db')
+end
+
+Given /^there is a dotfile$/ do
+  FileUtils.touch File.join(@working_dir, '.migrator')
 end
 
 When /^I run the rake task "([^\"]*)" with "([^\"]*)"$/ do |task, env|
@@ -32,4 +40,8 @@ When /^I run the rake task "([^\"]*)" with "([^\"]*)"$/ do |task, env|
     Rake.application[task].invoke
   end
   keys_to_delete.each { |k| ENV.delete(k) }
+end
+
+When /^I run the rake task "([^\"]*)"$/ do |task|
+  When %|I run the rake task "#{task}" with ""|
 end

@@ -1,0 +1,12 @@
+# Database connections
+
+default:
+  adapter: sqlite3
+  database: ":memory:"
+
+
+# WARNING: TOUCHING ANYTHING BELOW THIS LINE IS DANGEROUS
+
+# Applied migrations
+
+migrations: []
